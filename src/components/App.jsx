@@ -2,55 +2,67 @@ import { Component } from 'react';
 import { Section } from './Section/Section';
 import { Form } from './Section/Form/Form';
 import { ContactsList } from './Section/ContactsList/ContactsList';
+import { Filter } from './Section/Filter/Filter';
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
 
   addToContactList = newContact => {
-    this.setState(prevState => {
-      return {
-        contacts: [...prevState.contacts, newContact],
-      };
-    });
+    const { name: newName } = newContact;
+    const normalizedNewName = newName.toLowerCase();
+
+    !this.state.contacts.find(({ name: prevName }) =>
+      prevName.toLowerCase().includes(normalizedNewName)
+    )
+      ? this.setState(({ contacts }) => ({
+          contacts: [...contacts, newContact],
+        }))
+      : alert(`${newName} is already in contacts`);
   };
 
   filterContacts = e => {
-    const { name, value } = e.currentTarget;
+    const { value } = e.currentTarget;
 
-    this.setState({ [name]: value });
-
-    // this.findNumber();
+    this.setState({ filter: value });
   };
 
-  findNumber = () => {};
+  findContact = () => {
+    const { contacts, filter } = this.state;
+    const normilizedFilterValue = filter.toLowerCase();
+
+    return contacts.filter(({ name }) => name.includes(normilizedFilterValue));
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(({ id }) => id !== contactId),
+    }));
+  };
 
   render() {
-    const { contacts } = this.state;
+    const { filter } = this.state;
+    const foundContact = this.findContact();
     return (
       <>
         <Section title="Phonebook">
           <Form addToContactList={this.addToContactList} />
         </Section>
         <Section title="Contacts">
-          <input
-            type="text"
-            name="filter"
-            value={this.state.filter}
-            onChange={this.filterContacts}
-            autoComplete="off"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-          />
-          <ContactsList contacts={contacts} />
+          {this.state.contacts.length ? (
+            <>
+              <Filter
+                filterContacts={this.filterContacts}
+                filterValue={filter}
+              />
+              <ContactsList
+                foundContact={foundContact}
+                deleteContact={this.deleteContact}
+              />
+            </>
+          ) : null}
         </Section>
       </>
     );

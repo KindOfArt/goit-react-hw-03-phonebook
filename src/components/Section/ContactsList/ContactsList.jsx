@@ -1,13 +1,15 @@
-export const ContactsList = ({ contacts }) => {
+export const ContactsList = ({ foundContact, deleteContact }) => {
   return (
     <ul>
-      {contacts.map(({ id, name, number }) => {
+      {foundContact.map(({ id, name, number }) => {
         return (
           <li key={id}>
             <p>{name}</p>
             <p>{number}</p>
 
-            <button type="button">delete</button>
+            <button type="button" onClick={() => deleteContact(id)}>
+              delete
+            </button>
           </li>
         );
       })}
