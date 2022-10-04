@@ -14,8 +14,8 @@ class App extends Component {
     const { name: newName } = newContact;
     const normalizedNewName = newName.toLowerCase();
 
-    !this.state.contacts.find(({ name: prevName }) =>
-      prevName.toLowerCase().includes(normalizedNewName)
+    !this.state.contacts.find(
+      ({ name: prevName }) => prevName.toLowerCase() === normalizedNewName
     )
       ? this.setState(({ contacts }) => ({
           contacts: [...contacts, newContact],
@@ -37,8 +37,8 @@ class App extends Component {
   };
 
   deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(({ id }) => id !== contactId),
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter(({ id }) => id !== contactId),
     }));
   };
 
@@ -51,7 +51,7 @@ class App extends Component {
           <Form addToContactList={this.addToContactList} />
         </Section>
         <Section title="Contacts">
-          {this.state.contacts.length ? (
+          {this.state.contacts.length > 0 && (
             <>
               <Filter
                 filterContacts={this.filterContacts}
@@ -62,7 +62,7 @@ class App extends Component {
                 deleteContact={this.deleteContact}
               />
             </>
-          ) : null}
+          )}
         </Section>
       </>
     );

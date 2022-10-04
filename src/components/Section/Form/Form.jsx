@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import { nanoid } from 'nanoid';
 import { Component } from 'react';
 
@@ -63,3 +65,7 @@ export class Form extends Component {
     );
   }
 }
+
+Form.propTypes = {
+  addToContactList: PropTypes.func.isRequired,
+};
