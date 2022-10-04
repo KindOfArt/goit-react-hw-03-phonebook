@@ -33,7 +33,9 @@ class App extends Component {
     const { contacts, filter } = this.state;
     const normilizedFilterValue = filter.toLowerCase();
 
-    return contacts.filter(({ name }) => name.includes(normilizedFilterValue));
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(normilizedFilterValue)
+    );
   };
 
   deleteContact = contactId => {
