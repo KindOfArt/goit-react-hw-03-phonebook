@@ -4,11 +4,27 @@ import { Form } from './Section/Form/Form';
 import { ContactsList } from './Section/ContactsList/ContactsList';
 import { Filter } from './Section/Filter/Filter';
 
+const CONTACTSLIST = 'contactsList';
+
 class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem(CONTACTSLIST));
+
+    if (contacts) {
+      this.setState({ contacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(CONTACTSLIST, JSON.stringify(this.state.contacts));
+    }
+  }
 
   addToContactList = newContact => {
     const { name: newName } = newContact;
